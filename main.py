@@ -1,7 +1,9 @@
+import os
+import platform
+import signal
 import requests
 import subprocess
 from gpiozero import Button
-from signal import pause
 
 ## Variables
 
@@ -40,11 +42,17 @@ def printCard(card):
                 printImage(printer_mac, temp_image_path)
 
 def printRandomCard():
+    params = dict(
+        q = '-t:land'
+    )
     resp = requests.get(url=base_url + 'cards/random')
     last_card = resp.json()
     printCard(last_card)
 
 def printRelatedCards():
+    if last_card is None:
+        return
+
     for part in last_card['all_parts']:
         if part['name'] != last_card['name']:
             resp = requests.get(url=part['uri'])
@@ -57,4 +65,8 @@ button = Button(button_pin, hold_time=3)
 button.when_pressed = printRandomCard
 button.when_held = printRelatedCards
 
-pause()
+match platform.system():
+    case 'Linux':
+        signal.pause()   
+    case 'Windows':
+        os.system('pause')
