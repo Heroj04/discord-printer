@@ -5,6 +5,6 @@ After=multi-user.target
 Type=simple
 Restart=always
 WorkingDirectory=/opt/discord-printer
-ExecStart=/opt/discord-printer/venv/bin/python3 /opt/discord-printer/main.py
+ExecStart=/opt/discord-printer/venv/bin/python /opt/discord-printer/main.py
 [Install]
 WantedBy=multi-user.target
