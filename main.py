@@ -4,15 +4,18 @@ import signal
 import requests
 import subprocess
 from gpiozero import Button
+from dotenv import load_dotenv
 
 ## Variables
 
-base_url = 'https://api.scryfall.com/'
+load_dotenv()
 
-printer_mac = 'AA:BB:CC:DD:EE:FF'
-temp_image_path = 'image.png'
+base_url = os.getenv('BASE_URL')
 
-button_pin = 7
+printer_mac = os.getenv('PRINTER_MAC')
+temp_image_path = os.getenv('TEMP_IMAGE_PATH')
+
+button_pin = os.getenv('BUTTON_PIN')
 
 last_card = None
 
