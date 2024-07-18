@@ -26,23 +26,21 @@ def printImage(printerMac, imagePath):
     venv_python = 'catprinter/venv/bin/python'
     args = [venv_python, 'catprinter/print.py', '-d', printerMac, imagePath]
     subprocess.run(args)
+    
+def downloadImage(uri):
+    r = requests.get(uri)
+    with open(temp_image_path, 'wb') as fd:
+        for chunk in r.iter_content(chunk_size=128):
+            fd.write(chunk)
 
 def printCard(card):
     if "image_uris" in card:
-        print(card['image_uris']['normal'])
-        r = requests.get(card['image_uris']['normal'])
-        with open(temp_image_path, 'wb') as fd:
-            for chunk in r.iter_content(chunk_size=128):
-                fd.write(chunk)
+        downloadImage(card['image_uris']['normal'])
         printImage(printer_mac, temp_image_path)
     else:
         if "card_faces" in card:
             for face in card['card_faces']:
-                print(face['image_uris']['normal'])
-                r = requests.get(card['image_uris']['normal'])
-                with open(temp_image_path, 'wb') as fd:
-                    for chunk in r.iter_content(chunk_size=128):
-                        fd.write(chunk)
+                downloadImage(face['image_uris']['normal'])
                 printImage(printer_mac, temp_image_path)
 
 def printRandomCard():
