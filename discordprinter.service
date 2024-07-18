@@ -1,0 +1,10 @@
+[Unit]
+Description=Discord Thermal Printer Service
+After=multi-user.target
+[Service]
+Type=simple
+Restart=always
+WorkingDirectory=/opt/discord-printer
+ExecStart=/opt/discord-printer/venv/bin/python3 /opt/discord-printer/main.py
+[Install]
+WantedBy=multi-user.target
