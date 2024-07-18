@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 base_url = os.getenv('BASE_URL')
+query = os.getenv('QUERY')
 
 printer_mac = os.getenv('PRINTER_MAC')
 temp_image_path = os.getenv('TEMP_IMAGE_PATH')
@@ -46,7 +47,7 @@ def printCard(card):
 
 def printRandomCard():
     params = dict(
-        q = '-t:land'
+        q = query
     )
     resp = requests.get(url=base_url + 'cards/random', params=params)
     last_card = resp.json()
