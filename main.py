@@ -48,7 +48,7 @@ def printRandomCard():
     params = dict(
         q = '-t:land'
     )
-    resp = requests.get(url=base_url + 'cards/random')
+    resp = requests.get(url=base_url + 'cards/random', params=params)
     last_card = resp.json()
     printCard(last_card)
 
