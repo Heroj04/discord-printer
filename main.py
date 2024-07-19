@@ -6,6 +6,7 @@ import requests
 from gpiozero import Button
 from dotenv import load_dotenv
 from PIL import Image
+import numpy as np
 
 from catprinter.catprinter.cmds import PRINT_WIDTH, cmds_print_img
 from catprinter.catprinter.ble import run_ble
@@ -28,7 +29,7 @@ last_card = None
 
 def printImage(printerMac, imagePath):
     image = loadImage(imagePath)
-    data = cmds_print_img(image)
+    data = cmds_print_img(np.array(image))
     asyncio.run(run_ble(data, printerMac))
     
 def downloadImage(uri):
