@@ -1,3 +1,4 @@
+import asyncio
 import os
 import platform
 import signal
@@ -5,6 +6,10 @@ import requests
 import subprocess
 from gpiozero import Button
 from dotenv import load_dotenv
+from PIL import Image
+
+from catprinter.catprinter.cmds import PRINT_WIDTH, cmds_print_img
+from catprinter.catprinter.ble import run_ble
 
 ## Variables
 
@@ -23,9 +28,9 @@ last_card = None
 ## Functions
 
 def printImage(printerMac, imagePath):
-    venv_python = 'catprinter/venv/bin/python'
-    args = [venv_python, 'catprinter/print.py', '-d', printerMac, imagePath]
-    subprocess.run(args)
+    image = loadImage(imagePath)
+    data = cmds_print_img(image)
+    asyncio.run(run_ble(data, printerMac))
     
 def downloadImage(uri):
     r = requests.get(uri)
@@ -60,12 +65,22 @@ def printRelatedCards():
             resp = requests.get(url=part['uri'])
             cardPart = resp.json()
             printCard(cardPart)
+            
+def loadImage(path):
+    im = Image.open(path).convert('L')
+    width, height = im.size
+    factor = PRINT_WIDTH / width
+    resized = im.resize((PRINT_WIDTH, int(height * factor)))
+    resized = resized.convert('1')
+    return resized
 
 ## Script
 
 button = Button(button_pin, hold_time=3)
 button.when_pressed = printRandomCard
 button.when_held = printRelatedCards
+
+#printRandomCard()
 
 match platform.system():
     case 'Linux':
