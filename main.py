@@ -3,7 +3,6 @@ import os
 import platform
 import signal
 import requests
-import subprocess
 from gpiozero import Button
 from dotenv import load_dotenv
 from PIL import Image
